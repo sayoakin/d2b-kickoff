@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "d2b-kickoff"
+version = "0.1.0"
+description = ""
+authors = ["sayo <oluwasayo.akinkunmi@data2bots.com>"]
+license = "MIT"
+
+packages = [
+    {include = "app"}
+]
+
+[tool.poetry.dependencies]
+python = "3.9"
+pandas = "^1.4.2"
+flake8 = "^4.0.1"
+yapf = "^0.32.0"
+pre-commit = "^2.19.0"
+toml = "^0.10.2"
+google-cloud-bigquery = "^3.1.0"
+SQLAlchemy = "^1.4.36"
+pytest = "^7.1.2"
+tox = "^3.25.0"
+
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.yapf]
+based_on_style = "pep8"
+spaces_before_comment = 4
+split_before_logical_operator = true
+
+[tool.yapfignore]
+ignore_patterns = [
+    "man.py"
+]
