@@ -130,3 +130,5 @@ dmypy.json
 
 
 d2b-sdb*.json
+
+variable.py
