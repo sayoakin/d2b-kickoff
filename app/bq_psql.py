@@ -1,5 +1,5 @@
 from google.cloud import bigquery
-from app.variable import DATABASE_NAME, DATABASE_PASSWORD, DATABASE_USER, HOST_NAME, PORT
+from variable import DATABASE_NAME, DATABASE_PASSWORD, DATABASE_USER, HOST_NAME, PORT
 from datetime import datetime
 from sqlalchemy import create_engine
 import pandas as pd
@@ -51,42 +51,43 @@ def load_location_data_to_postgres(engine, table, s_columns: list,
     print(f"Data loaded in {round(end - start, 1)} seconds")
     print(green_color % "connection closed")
 
-####################################################################
-#               INPUTS PARAMETERS
-####################################################################
+if __name__ == "__main__":
+    ####################################################################
+    #               INPUTS PARAMETERS
+    ####################################################################
 
 
-project = input("GCP bigquery project name: ")
-dataset = input("GCP bigquery dataset name: ")
-table = input("GCP bigquery table name: ")
-target_table = input("Postgresql table name: ")
-engine = "postgresql"
-bq_columns = input("GCP bigquery table columns name in a list format: ")
-sql_columns = input("Postgresql table columns name in a list format: ")
-print(green_color % "inputs entered successful")
+    project = input("GCP bigquery project name: ")
+    dataset = input("GCP bigquery dataset name: ")
+    table = input("GCP bigquery table name: ")
+    target_table = input("Postgresql table name: ")
+    engine = "postgresql"
+    bq_columns = input("GCP bigquery table columns name in a list format: ")
+    sql_columns = input("Postgresql table columns name in a list format: ")
+    print(green_color % "inputs entered successful")
 
-####################################################################
-#            EXECUTIONS OF FUNCTIONS
-####################################################################
+    ####################################################################
+    #            EXECUTIONS OF FUNCTIONS
+    ####################################################################
 
-try:
-    bq_query_job = get_bigquery_data(
-        project, dataset, table, bq_columns)
-    bq_source_df = bq_query_job.to_dataframe()
+    try:
+        bq_query_job = get_bigquery_data(
+            project, dataset, table, bq_columns)
+        bq_source_df = bq_query_job.to_dataframe()
 
-    bq_col_len = len((bq_columns).split(","))
-    sql_col_len = len((sql_columns).split(","))
+        bq_col_len = len((bq_columns).split(","))
+        sql_col_len = len((sql_columns).split(","))
 
-    if (bq_col_len) != (sql_col_len):
-        if "created_at" and "updated_at" in "".join(sql_columns).split(","):
-            bq_source_df = bq_source_df.assign(
-                created_at=datetime.now(), updated_at=datetime.now())
-    print(bq_source_df.head())
-    load_location_data_to_postgres(
-        engine,
-        target_table,
-        sql_columns,
-        bq_source_df,
-    )
-except Exception as e:
-    print(e)
+        if (bq_col_len) != (sql_col_len):
+            if "created_at" and "updated_at" in "".join(sql_columns).split(","):
+                bq_source_df = bq_source_df.assign(
+                    created_at=datetime.now(), updated_at=datetime.now())
+        print(bq_source_df.head())
+        load_location_data_to_postgres(
+            engine,
+            target_table,
+            sql_columns,
+            bq_source_df,
+        )
+    except Exception as e:
+        print(e)
