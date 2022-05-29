@@ -32,7 +32,7 @@ def get_bigquery_data(gcp_project: str, bq_dataset: str, bq_table: str,
 ####################################################################
 
 
-def load_location_data_to_postgres(engine, table, s_columns: list,
+def load_data_to_postgres(engine, table, s_columns: list,
                                    source: pd.DataFrame):
     start = time.perf_counter()
 
@@ -44,9 +44,9 @@ def load_location_data_to_postgres(engine, table, s_columns: list,
     source.columns = "".join(s_columns).split(",")
 
     print(green_color % f"Loading data to {table} table")
-    source.to_sql(table, engine, if_exists="replace", index_label="id")
+    result = source.to_sql(table, engine, if_exists="replace", index_label="id")
     print(green_color % "Data loaded successfully")
-
+    return result
     end = time.perf_counter()
     print(f"Data loaded in {round(end - start, 1)} seconds")
     print(green_color % "connection closed")
